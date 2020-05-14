@@ -1,7 +1,8 @@
-import requests, json, urllib, os, time
+import requests, json, urllib, os, time,sys
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
+root_path = os.path.split(sys.path[0])[0]
 
 class PiYaoSpiderInterface:
     def get_url(self):
@@ -30,7 +31,7 @@ class PiYaoSpider(PiYaoSpiderInterface):
         self.__url = url
 
     def get_url(self):
-        article_directory = {}
+        article_dir_list = []
         nid_list = [11158863, 11158864, 11158865, 11158866, 11158867]
         for i in range(11158879, 11158915 + 1):
             nid_list.append(i)
@@ -47,24 +48,35 @@ class PiYaoSpider(PiYaoSpiderInterface):
                 data_content = response.content.decode('utf-8')
                 article_list = json.loads(data_content)['data']['list']
                 for article in article_list:
-                    article_directory[article['LinkUrl']] = article['Title']
+                    article_directory = {
+                        'url': article['LinkUrl'],
+                        'DocID':article['DocID'],
+                        'Author':article['Author'],
+                        'NodeId':article['NodeId'],
+                        'PubTime':article['PubTime'],
+                        'Title':article['Title']
+                    }
+                    # article_directory[article['LinkUrl']] = article['Title']
                     print("获取页面内容为：" + article['Title'] + "\nURL为" + article['LinkUrl'])
-                    self.get_article(article['LinkUrl'], article['Title'])
+                    # self.get_article(article['LinkUrl'], article['Title'])
+                    if article['PubTime'] < '2019-09-01':
+                        break
+                    article_dir_list.append(article_directory)
             except Exception as e:
                 print(e)
-        with open("out.txt", 'w+', encoding='utf-8') as output_file:
-            output_file.write(json.dumps(article_directory))
+        # print(len(article_dir_list))
+        with open(root_path+'/sourse_data/zhongguopiyaowang.json', 'w', encoding='utf-8') as output_file:
+            output_file.write(json.dumps(article_dir_list))
 
     def get_article(self, article_url, article_title):
         response = requests.get(article_url, headers=self.__headers)
         content = response.content.decode('utf-8')
         soup = BeautifulSoup(content, 'lxml')
         article_content = soup.select("div[class='con_txt']")
-        if not os.path.exists('../sourse_data'):
-            os.mkdir('../sourse_data')
-        with open('./sourse_data/' + article_title.replace("？", "").replace('?', '').replace(':', '').replace('！',
-                                                                                                          "").replace(
-                "|", "").replace("\"", "").replace(r"/", "").replace(r"\"", "") + '.html', 'w+',
+        if not os.path.exists(root_path+'/sourse_data'):
+            os.mkdir(root_path+'/sourse_data')
+        with open(root_path+'/sourse_data/' + article_title.replace("？", "").replace('?', '').replace(':', '').replace('！',"")
+        .replace("|", "").replace("\"", "").replace(r"/", "").replace(r"\"", "") + '.html', 'w+',
                   encoding='utf-8') as output_file:
             output_file.write(str(article_content))
 
