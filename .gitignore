@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#国家卫健委
+/国家卫健委-新冠肺炎专区/fault
