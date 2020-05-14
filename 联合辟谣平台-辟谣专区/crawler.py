@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import requests, json, os,sys
-
+import urllib.parse
 
 root_path = os.path.split(sys.path[0])[0]
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     result = get_url(nid=11215616,pgnum=1,cnt=1)
     totalnum = data_parser(result)['totalnum']
     result = get_url(nid=11215616,pgnum=1,cnt=totalnum)
-    data_list = data_parser(result)['data']['list']
+    data_list = data_parser(urllib.parse.unquote(result))['data']['list']
     article_list = []
     for data in data_list:
         article = {
