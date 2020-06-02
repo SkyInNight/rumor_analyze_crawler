@@ -21,10 +21,10 @@ def get_url(ptime=0,default_error_time=0):
 
 if __name__ == '__main__':
 
-    current_date = '2020-05-11'
+    current_date = '2020-05-30'
     current_ptime = 0
     article_list = []
-    while current_date > '2019-09-01':
+    while current_date > '2020-04-10':
         result = get_url(ptime=current_ptime)
         data = json.loads(urllib.parse.unquote(result))['result']['data']
         for date in data.keys():

@@ -59,7 +59,7 @@ class PiYaoSpider(PiYaoSpiderInterface):
                     # article_directory[article['LinkUrl']] = article['Title']
                     print("获取页面内容为：" + article['Title'] + "\nURL为" + article['LinkUrl'])
                     # self.get_article(article['LinkUrl'], article['Title'])
-                    if article['PubTime'] < '2019-09-01':
+                    if article['PubTime'] < '2020-04-10':
                         break
                     article_dir_list.append(article_directory)
             except Exception as e:

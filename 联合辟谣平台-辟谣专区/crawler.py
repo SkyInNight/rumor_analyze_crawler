@@ -29,22 +29,25 @@ def data_parser(text):
 if __name__ == '__main__':
     result = get_url(nid=11215616,pgnum=1,cnt=1)
     totalnum = data_parser(result)['totalnum']
-    result = get_url(nid=11215616,pgnum=1,cnt=totalnum)
-    data_list = data_parser(urllib.parse.unquote(result))['data']['list']
+    nid = 11215616
     article_list = []
-    for data in data_list:
-        article = {
-            'DocID':data['DocID'],
-            'Title':data['Title'],
-            'NodeId':data['NodeId'],
-            'PubTime':data['PubTime'],
-            'LinkUrl':data['LinkUrl'],
-            'keyword':data['keyword'],
-            'Editor':data['Editor'],
-            'Author':data['Author'],
-            'SourceName':data['SourceName'],
-            'IsLink':data['IsLink']
-            }
-        article_list.append(article)
+    for i in range(1,6):
+        result = get_url(nid=nid,pgnum=i,cnt=totalnum)
+        data_list = data_parser(urllib.parse.unquote(result))['data']['list']
+        for data in data_list:
+            article = {
+                'DocID':data['DocID'],
+                'Title':data['Title'],
+                'NodeId':data['NodeId'],
+                'PubTime':data['PubTime'],
+                'LinkUrl':data['LinkUrl'],
+                'keyword':data['keyword'],
+                'Editor':data['Editor'],
+                'Author':data['Author'],
+                'SourceName':data['SourceName'],
+                'IsLink':data['IsLink']
+                }
+            nid = data['NodeId']
+            article_list.append(article)
     with open(root_path+'/sourse_data/piyao_xinguanzhuanqu.json','w',encoding='utf-8') as f:
         f.write(json.dumps(article_list))
