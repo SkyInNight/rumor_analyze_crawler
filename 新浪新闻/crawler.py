@@ -29,7 +29,7 @@ def data_parser(text):
 
 if __name__ == '__main__':
     # current_date = '2020-05-11'
-    pgnum = 40
+    pgnum = 1
     article_list = []
     while pgnum < 50:
         result = get_url(pgnum)
